@@ -1,13 +1,18 @@
 
 ```
 aws lambda list-functions --profile aws-federated --region us-west-2
+
+aws cloudformation create-stack --stack-name inv-event-processor --template-body file://Infrastructure.json --profile aws-federated --region us-east-2
+
 ```
 
 build artifact
 ----------------
 
+as lambda server does not allow adding classpath with external java-archives, create
+java-archive with deps which has to < 50MBs
+
 ```
-lein pom
 mvn clean compile assembly:single
 ```
 
@@ -34,6 +39,8 @@ $ aws lambda create-function --function-name inventory-event-processor --runtime
 }
 ```
 
+setup source as KStream.
+
 ```
 $ aws lambda list-functions --profile aws-federated --region us-west-2
 {
@@ -55,6 +62,19 @@ $ aws lambda list-functions --profile aws-federated --region us-west-2
     ]
 }
 ```
+
+emit events
+-----------
+
+```
+$ aws kinesis put-record --stream-name InvStream --data "{"name": "ppd"}" --partition-key 3 --explicit-hash-key 3 --profile aws-federated --region us-east-2 
+{
+    "ShardId": "shardId-000000000000", 
+    "SequenceNumber": "49574469025035173505113407932307675841737459605627207682"
+}
+```
+
+the handler will be triggered as soon as event arrives stream.
 
 run the event handler
 -------------------------

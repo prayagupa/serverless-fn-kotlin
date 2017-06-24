@@ -1,0 +1,104 @@
+{
+  "Resources": {
+    "StreamAccessPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudwatch:*"
+              ],
+              "Resource": [
+                "*"
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": "kinesis:*",
+              "Resource": "arn:aws:kinesis:us-west-2:*:stream/*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:CreateTable",
+                "dynamodb:DeleteItem",
+                "dynamodb:DeleteTable",
+                "dynamodb:DescribeLimits",
+                "dynamodb:DescribeReservedCapacity",
+                "dynamodb:DescribeReservedCapacityOfferings",
+                "dynamodb:DescribeStream",
+                "dynamodb:DescribeTable",
+                "dynamodb:GetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams",
+                "dynamodb:ListTables",
+                "dynamodb:PutItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:UpdateItem",
+                "dynamodb:UpdateTable"
+              ],
+              "Resource": "arn:aws:dynamodb:us-west-2:*:table/*"
+            }
+          ]
+        },
+        "PolicyName": "upd-StreamAccessPolicy",
+        "Roles": [
+          {
+            "Ref": "IngestionApiAccessMgmtRole"
+          }
+        ]
+      }
+    },
+    "IngestionApiAccessMgmtRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "upd-IngestionApiAccessMgmtRole",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/upd/"
+      }
+    },
+    "InvStreamResource": {
+      "Type": "AWS::Kinesis::Stream",
+      "Properties": {
+        "Name": "InvStream",
+        "ShardCount": 4,
+        "Tags": [
+          {
+            "Key": "Environment",
+            "Value": "Dev"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "StreamResourceResult": {
+      "Description": "Stream",
+      "Value": {
+        "Ref": "InvStreamResource"
+      }
+    }
+  }
+}

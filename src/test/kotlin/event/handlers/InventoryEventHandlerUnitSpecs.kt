@@ -1,71 +1,39 @@
 package event.handlers
 
-import com.amazonaws.services.lambda.runtime.ClientContext
-import com.amazonaws.services.lambda.runtime.CognitoIdentity
-import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.lambda.runtime.LambdaLogger
-import io.kotlintest.matchers.shouldBe
+import com.amazonaws.services.lambda.runtime.events.KinesisEvent
 import io.kotlintest.specs.StringSpec
+import java.nio.ByteBuffer
+import java.util.Arrays.asList
 
 /**
  * Created by prayagupd
  * on 6/24/17.
  */
 
-class T : Context {
-    override fun getAwsRequestId(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getLogStreamName(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getClientContext(): ClientContext {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getFunctionName(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getRemainingTimeInMillis(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getLogger(): LambdaLogger {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getInvokedFunctionArn(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getMemoryLimitInMB(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getLogGroupName(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getFunctionVersion(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getIdentity(): CognitoIdentity {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-}
-
 class InventoryEventHandlerUnitSpecs : StringSpec() {
 
     init {
-        "handleRequest should return message" {
+        "handleRequest should process a message" {
             val handler = InventoryEventHandler()
 
-            handler.handleRequest(100, T()) shouldBe """{"eventId":100,"message":"SUCCESS"}"""
+            val records = KinesisEvent()
+            records.records = ArrayList<KinesisEvent.KinesisEventRecord>()
+            handler.onEvent(records)
+        }
+
+        "handleRequest should process two messages" {
+            val handler = InventoryEventHandler()
+
+            val records = KinesisEvent()
+            val record = KinesisEvent.KinesisEventRecord()
+            record.eventID = "100"
+
+            val k_event = KinesisEvent.Record()
+            k_event.data = ByteBuffer.wrap("somedata".toByteArray(Charsets.UTF_8))
+            record.kinesis = k_event
+
+            records.records = asList(record)
+            handler.onEvent(records)
         }
 
     }

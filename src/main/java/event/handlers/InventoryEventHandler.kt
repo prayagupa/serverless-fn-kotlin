@@ -1,24 +1,23 @@
 package event.handlers
 
-import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.lambda.runtime.RequestHandler
-import org.json.JSONObject
-import java.util.*
+import com.amazonaws.services.lambda.runtime.events.KinesisEvent
+import org.apache.logging.log4j.LogManager
 
-class InventoryEventHandler : RequestHandler<Int, String> {
+class BaseEvent : KinesisEvent()
 
-    override public fun handleRequest(eventId: Int?, context: Context): String {
-        val json = JSONObject()
-        json.put("eventId", eventId)
-        json.put("message", "SUCCESS")
+interface EventHandler {
+    fun onEvent(event: KinesisEvent)
+}
 
-        return json.toString()
-    }
+class InventoryEventHandler : EventHandler {
 
-    companion object {
+    val logger = LogManager.getLogger(InventoryEventHandler::class.java)
 
-        @JvmStatic fun main(event: Array<String>) {
-            println("[INFO] received event " + Arrays.toString(event))
+    public override fun onEvent(event: KinesisEvent) {
+        logger.info("ProcessingEvents")
+
+        event.records.forEach { e ->
+            logger.info("eventType:ProcesingEvent,body:" + String(e.kinesis.data.array()))
         }
     }
 }

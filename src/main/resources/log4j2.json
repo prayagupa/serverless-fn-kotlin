@@ -1,0 +1,32 @@
+{
+  "configuration": {
+    "name": "amz-wavelength",
+    "appenders": {
+      "RollingFile": {
+        "name": "rollingStone",
+        "fileName": "stream-processor.log",
+        "filePattern": "stream-processor-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz",
+        "immediateFlush" : true,
+        "JSONLayout": {
+          "complete": false,
+          "compact": true,
+          "eventEol": true
+        },
+        "SizeBasedTriggeringPolicy": {
+          "size": "10 MB"
+        },
+        "DefaultRolloverStrategy": {
+          "max": "10"
+        }
+      }
+    },
+    "loggers": {
+      "root": {
+        "level": "debug",
+        "appender-ref": {
+          "ref": "rollingStone"
+        }
+      }
+    }
+  }
+}
