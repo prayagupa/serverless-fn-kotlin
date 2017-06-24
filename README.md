@@ -68,3 +68,10 @@ aws lambda invoke --invocation-type RequestResponse --function-name order-event-
     "StatusCode": 200
 }
 ```
+
+
+References
+-----------
+
+https://blog.symphonia.io/learning-lambda-part-5-743d8a99db53
+
