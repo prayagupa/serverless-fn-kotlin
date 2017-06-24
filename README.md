@@ -3,14 +3,12 @@
 aws lambda list-functions --profile aws-federated --region us-west-2
 ```
 
-http://docs.aws.amazon.com/lambda/latest/dg/get-started-create-function.html
-
 build artifact
 ----------------
 
 ```
 lein pom
-mvn clean install
+mvn clean compile assembly:single
 ```
 
 create lambda handler
@@ -19,7 +17,7 @@ create lambda handler
 create a Identity Access Role with a policy allowing acccess to Lambda server.
 
 ```
-$ aws lambda create-function --function-name order-event-processor --runtime java8 --role arn:aws:iam::033814027302:role/gregor-samsa-lambda-role --handler handler.OrderEventHandler::onEvent --zip-file fileb://target/aws-test-1.0-SNAPSHOT.jar --memory-size 512 --region us-west-2 --profile aws-federated
+$ aws lambda create-function --function-name inventory-event-processor --runtime java8 --role arn:aws:iam::033814027302:role/gregor-samsa-lambda-role --handler event.handlers.InventoryEventHandler::handleRequest --zip-file fileb://target/amz-wavelength-1.0-SNAPSHOT.jar --memory-size 512 --region us-west-2 --profile aws-federated
 {
     "CodeSha256": "glQaUTO4Kybl5SkJoWOy5T330iaechhSdS3VVG5lC6g=", 
     "FunctionName": "order-event-processor", 
@@ -62,9 +60,8 @@ run the event handler
 -------------------------
 
 ```
-aws lambda invoke --invocation-type RequestResponse --function-name order-event-processor --payload \"1\" --region us-west-2 --profile aws-federated output.text
+aws lambda invoke --invocation-type RequestResponse --function-name inventory-event-processor --payload 100 --region us-west-2 --profile aws-federated output.text
 {
-    "FunctionError": "Unhandled", 
     "StatusCode": 200
 }
 ```
@@ -72,6 +69,8 @@ aws lambda invoke --invocation-type RequestResponse --function-name order-event-
 
 References
 -----------
+
+http://docs.aws.amazon.com/lambda/latest/dg/get-started-create-function.html
 
 https://blog.symphonia.io/learning-lambda-part-5-743d8a99db53
 

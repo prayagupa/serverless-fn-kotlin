@@ -2,12 +2,17 @@ package event.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import org.json.JSONObject
 import java.util.*
 
 class InventoryEventHandler : RequestHandler<Int, String> {
 
-    override fun handleRequest(eventId: Int?, context: Context): String {
-        return "{\"message\" : \"event processed\"}"
+    override public fun handleRequest(eventId: Int?, context: Context): String {
+        val json = JSONObject()
+        json.put("eventId", eventId)
+        json.put("message", "SUCCESS")
+
+        return json.toString()
     }
 
     companion object {
