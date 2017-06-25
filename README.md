@@ -67,10 +67,22 @@ emit events
 -----------
 
 ```
-$ aws kinesis put-record --stream-name InvStream --data "{"name": "ppd"}" --partition-key 3 --explicit-hash-key 3 --profile aws-federated --region us-east-2 
+$ aws kinesis put-record --stream-name InvStream --data "{"name": "ppd-3"}" --partition-key 3 --explicit-hash-key 3 --profile aws-federated --region us-east-2 
 {
     "ShardId": "shardId-000000000000", 
     "SequenceNumber": "49574469025035173505113407932307675841737459605627207682"
+}
+
+$ aws kinesis put-record --stream-name InvStream --data "{"name": "ppd-6"}" --partition-key 6 --profile aws-federated --region us-east-2 
+{
+    "ShardId": "shardId-000000000000", 
+    "SequenceNumber": "49574476939837253406015806857548040859250542097159159810"
+}
+
+$ aws kinesis put-record --stream-name InvStream --data "{"name": "ppd-8"}" --partition-key 8 --profile aws-federated --region us-east-2 
+{
+    "ShardId": "shardId-000000000003", 
+    "SequenceNumber": "49574476831790142919134941539823359581397198178663530546"
 }
 ```
 
@@ -94,3 +106,4 @@ http://docs.aws.amazon.com/lambda/latest/dg/get-started-create-function.html
 
 https://blog.symphonia.io/learning-lambda-part-5-743d8a99db53
 
+https://hackernoon.com/processing-real-time-big-data-streams-using-kinesis-lambda-561a029ef305

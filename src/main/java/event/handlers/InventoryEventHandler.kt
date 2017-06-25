@@ -1,7 +1,7 @@
 package event.handlers
 
 import com.amazonaws.services.lambda.runtime.events.KinesisEvent
-import org.apache.logging.log4j.LogManager
+import org.apache.log4j.LogManager
 
 class BaseEvent : KinesisEvent()
 
